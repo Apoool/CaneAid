@@ -1,7 +1,8 @@
 print('Hello World')
 
-import playsound as ps
-import time
+from playsound import playsound 
+from core.textToSpeech import Speak
+
 
 with open("test.txt", "r") as f:
     content = f.readlines()
@@ -16,10 +17,12 @@ for line in content:
     # Add the word to the list
     words.append(word)
 
+test = Speak(words)
+
+test.speech()
+
 # Print the list of words
 print(words)
 print(len(words))
-ps.playsound("audio/ako.mp3")
 #ps.playsound("audio/ikaw.wav")
 
-#TRY RECURSION
