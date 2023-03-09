@@ -19,7 +19,7 @@ for line in content:
 # Print the list of words
 print(words)
 print(len(words))
-ps.playsound("ako.wav")
-ps.playsound("ikaw.wav")
+ps.playsound("audio/ako.mp3")
+#ps.playsound("audio/ikaw.wav")
 
 #TRY RECURSION
