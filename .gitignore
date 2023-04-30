@@ -7,3 +7,5 @@ env/
 models_dir/
 main2.py
 image_detection[backup].py
+core/get_pi_requirements.sh
+core/__pycache__/
