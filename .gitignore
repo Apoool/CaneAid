@@ -1,0 +1,9 @@
+__pycache__/
+Test/
+image_process/
+audio/
+results/
+env/
+models_dir/
+main2.py
+image_detection[backup].py
