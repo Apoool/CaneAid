@@ -178,7 +178,7 @@ def loop():
 				
 				
 				else:
-					pygame.mixer.music.load(path_audio+ "no_obstacle.mp3")
+					pygame.mixer.music.load(path_audio+ "un_obstacle.mp3")
 					pygame.mixer.music.play()
 					while pygame.mixer.music.get_busy() == True:
 						continue
