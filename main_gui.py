@@ -106,14 +106,11 @@ class App:
                         if not file_name.endswith("txt"):
                                 self.model_list.append(file_name)
                 
-        #def list_information(self):
-                
-                
         def check_selected_model(self):
                 selected_model = os.getcwd() + "/Desktop/Main/models_dir/selected_model.txt"
                 with open(selected_model, 'r') as file:
                         self.model = file.readline().replace('\n', '')
-                        print(self.model)
+                        #print(self.model)
                                 
         def update_model(self, value):
                 selected_model = os.getcwd() + "/Desktop/Main/models_dir/selected_model.txt"

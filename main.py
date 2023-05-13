@@ -6,7 +6,7 @@ import os
 import shutil
 import cv2
 
-
+water_sensor_pin = 13
 button = 18
 TRIG = 16
 ECHO = 15
@@ -15,6 +15,7 @@ path_file = "/home/caneaid/Desktop/Main/results/image.txt"
 path_audio = "/home/caneaid/Desktop/Main/audio/"
 model = "model_1" #default
 path_model = "/home/caneaid/Desktop/Main/models_dir/selected_model.txt"
+
 
 pygame.mixer.init()
 print(cv2.__version__)
@@ -30,14 +31,17 @@ def setup():
 	GPIO.setup(TRIG,GPIO.OUT)
 	GPIO.setup(ECHO,GPIO.IN)
 	GPIO.output(TRIG, False)
+	GPIO.setup(water_sensor_pin, GPIO.IN)
 	readModel()
 
 def loop():
-	pygame.mixer.music.load(path_audio+ "good_day.mp3")
+	water_detect = 0
+	pygame.mixer.music.load(path_audio + "good_day.mp3")
 	pygame.mixer.music.play()
 	while pygame.mixer.music.get_busy() == True:
 		continue
 	while True:
+
 		button_state = GPIO.input(button)
 		GPIO.output(TRIG, True)
 		time.sleep(1)
@@ -51,6 +55,22 @@ def loop():
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
 		distance = round(distance+1.15)
+		
+		#Water sensor
+		if water_detect == 0:
+			if GPIO.input(water_sensor_pin):
+				#print(water_sensor_pin)
+				water_detect = 1
+				pygame.mixer.music.load(path_audio+ "water_detected.mp3")
+				pygame.mixer.music.play()
+				while pygame.mixer.music.get_busy() == True:
+					continue
+				print("1")
+			else:
+				print("0")
+				#print(water_sensor_pin)
+		#else:
+			#print("water")
 
 		#Button for image capture and processing
 		if  button_state == False:
