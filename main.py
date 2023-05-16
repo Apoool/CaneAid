@@ -16,15 +16,17 @@ path_audio = "/home/caneaid/Desktop/Main/audio/"
 model = "model_1" #default
 path_model = "/home/caneaid/Desktop/Main/models_dir/selected_model.txt"
 
-
+#Initiate pygame and opencv version
 pygame.mixer.init()
 print(cv2.__version__)
 
+#for testing2
 def readModel():
 	with open(path_model, "r") as f:
 		model = f.readlines()	
 		print(model)
 
+#initiate GPIO setup
 def setup():
 	GPIO.setmode(GPIO.BOARD)
 	GPIO.setup(button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -35,22 +37,28 @@ def setup():
 	readModel()
 
 def loop():
+	#initiate water sensor variable so that it will detect once every restart of the system
 	water_detect = 0
+	
+	#initiate greeting
 	pygame.mixer.music.load(path_audio + "good_day.mp3")
 	pygame.mixer.music.play()
 	while pygame.mixer.music.get_busy() == True:
 		continue
 	while True:
 
+		#read button state
 		button_state = GPIO.input(button)
+		
+		#read ultrasonic reading
 		GPIO.output(TRIG, True)
 		time.sleep(1)
 		GPIO.output(TRIG, False)
-
 		while GPIO.input(ECHO)==0:
 			pulse_start = time.time()
 		while GPIO.input(ECHO)==1:
 			pulse_end = time.time()
+			
 		#calculate the data into centimeters
 		pulse_duration = pulse_end - pulse_start
 		distance = pulse_duration * 17150
@@ -72,6 +80,7 @@ def loop():
 		#else:
 			#print("water")
 
+		#Check if button state has been clicked
 		#Button for image capture and processing
 		if  button_state == False:
 			print('Button Pressed...')
@@ -83,11 +92,11 @@ def loop():
 			
 			#image capture
 			subprocess.call(["raspistill", "-t", "500", "-o", "/home/caneaid/Desktop/Main/image.jpg"])
-			#image object recognition
+			#image object detection
 			subprocess.call(["python", "/home/caneaid/Desktop/Main/core/image_detection.py", 
 			f"--modeldir=/home/caneaid/Desktop/Main/models_dir/{model}", "--threshold=.6", "--save_results", "--image=/home/caneaid/Desktop/Main/image.jpg"])
 			
-			#If no objects captured text to speech wont be executed
+			#If no objects detected, speech output will tell
 			print(os.stat(path_file).st_size)
 			if os.stat(path_file).st_size != 0:
 				with open("/home/caneaid/Desktop/Main/results/image.txt", "r") as f:
@@ -108,7 +117,6 @@ def loop():
 				for x in words:
 					print(x)
 					pygame.mixer.music.load(path_audio+ x + ".mp3")
-					#pygame.mixer.music.load("ako.mp3")
 					pygame.mixer.music.play()
 					while pygame.mixer.music.get_busy() == True:
 						continue
@@ -123,6 +131,7 @@ def loop():
 				
 				
 			else:
+				#unidentified object will play in speech output
 				pygame.mixer.music.load(path_audio+ "no_obstacle.mp3")
 				pygame.mixer.music.play()
 				while pygame.mixer.music.get_busy() == True:
@@ -134,20 +143,18 @@ def loop():
 				print('?')
 				time.sleep(0.2)
 
-		#this will be used for automatic image capture and processing depends on consultation
-		#will also be used for little navigation feature together with other 2 sensors
+		#ultrasonic sensor detect
 		#change to 150 cm (150cm = 1.5m) according to papers
 		#20 cm for testing
 		if distance <= 150:
-			print(distance)
-			#autostart testing
 			pygame.mixer.music.load(path_audio + "obstacle_close.mp3")
 			pygame.mixer.music.play()
 			while pygame.mixer.music.get_busy() == True:
 				continue
 			print("too close")
 			
-					#Button for image capture and processing
+			#Image capture and object detection function if the button is still clicked after the ultrasonic speech output play
+			#Button for image capture and processing
 			if  button_state == False:
 				print('Button Pressed...')
 				print(distance)
@@ -162,7 +169,7 @@ def loop():
 				subprocess.call(["python", "/home/caneaid/Desktop/Main/core/image_detection.py", 
 				f"--modeldir=/home/caneaid/Desktop/Main/models_dir/{model}", "--threshold=.6", "--save_results", "--image=/home/caneaid/Desktop/Main/image.jpg"])
 			
-				#If no objects captured text to speech wont be executed
+				
 				print(os.stat(path_file).st_size)
 				if os.stat(path_file).st_size != 0:
 					with open("/home/caneaid/Desktop/Main/results/image.txt", "r") as f:
