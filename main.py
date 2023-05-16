@@ -167,7 +167,7 @@ def loop():
 				subprocess.call(["raspistill", "-t", "500", "-o", "/home/caneaid/Desktop/Main/image.jpg"])
 				#image object recognition
 				subprocess.call(["python", "/home/caneaid/Desktop/Main/core/image_detection.py", 
-				f"--modeldir=/home/caneaid/Desktop/Main/models_dir/{model}", "--threshold=.6", "--save_results", "--image=/home/caneaid/Desktop/Main/image.jpg"])
+				f"--modeldir=/home/caneaid/Desktop/Main/models_dir/{model}", "--threshold=.75", "--save_results", "--image=/home/caneaid/Desktop/Main/image.jpg"])
 			
 				
 				print(os.stat(path_file).st_size)
