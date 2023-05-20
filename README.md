@@ -3,3 +3,4 @@
 
 ## Download audio and models from:
 https://drive.google.com/drive/folders/1DCiOr3_j05FukFS8sQ5X9jVufgBGAj7F?usp=sharing
+rename it to audio and models_dir
